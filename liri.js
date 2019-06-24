@@ -1,5 +1,9 @@
 require('dotenv').config();
 const Spotify = require('node-spotify-api');
+const request = require("request");
+const moment = require('moment');
+moment().format();
+
 
 // Import API keys from keys.js file
 const keys = require('./keys.js');
@@ -16,16 +20,36 @@ const spotify = new Spotify(keys.spotify);
 
 
 const command = process.argv[2];
-let query = '';
-for (let i = 3; i < process.argv.length; i++) {
-  query = query + " " + process.argv[i];
-};
+const query = process.argv[3];
 
 
 // --------------------------------------------------------------
 // concert-this
-// var queryURL = `https://rest.bandsintown.com/artists/${query}/events?app_id=codingbootcamp`;
+const concertThis = () => {
+ const bitURL = `https://rest.bandsintown.com/artists/${query}/events?app_id=codingbootcamp`;
 
+ console.log(`
+        =========================
+            CALLING BIT API...  
+        =========================
+        `)
+
+ request(bitURL, (err, data, body) => {
+  if (!err && data.statusCode === 200) {
+    const concerts = JSON.parse(body);
+      
+    for (let i = 0; i < concerts.length; i++) {
+      eventDate = concerts[i].datetime;
+      convertTime = moment(eventDate)
+      console.log(`
+      Venue Name: ${concerts[i].venue.name}
+      Venue Location: ${concerts[i].venue.city}
+      Event Date: ${convertTime.format('L')}
+      `);
+    }
+  }
+ });
+}
 
 
 // spotify-this-song : Search Spotify API by song name
@@ -38,13 +62,17 @@ const spotifyThisSong = () => {
   
     const artists = [];
     for (let i = 0; i < data.tracks.items.length; i++) {
-      artists.push(data.tracks.items[i].artists);
-    }
-
-    console.log(artists);
+        artists.push(data.tracks.items[i].artists);
+      }
+    
+    
     if (artists){
-      artists.forEach(function (element) {
+      artists.forEach((element) => {
+        if (artists.includes(element[0].name)) {
+          return false;
+        } else {
         console.log(`Artists: ${element[0].name}`);
+        }
       });
     }
 
@@ -55,6 +83,7 @@ const spotifyThisSong = () => {
     console.log("preview song: " + songs.external_urls.spotify);
 
     console.log("----------------------------------------");
+
   });
 }
 
@@ -63,33 +92,32 @@ const spotifyThisSong = () => {
 // movie-this : Search OMDB API by movie name
 // display: title, year, IMDB rating, Rotten Tomatoes rating, country, language, plot, actors
 const movieThis = () => {
-  const request = require("request");
   const omdbURL = `http://www.omdbapi.com/?t=${query}&y=&plot=short&apikey=trilogy`;
 
   console.log(`
-              =========================
-                  CALLING OMDB API...  
-              =========================
-              `)
+    =========================
+        CALLING OMDB API...  
+    =========================
+    `)
 
-  request(omdbURL, function(err, data, body) {
-        if (!err && data.statusCode === 200) {
-            const info = JSON.parse(body);
-            console.log(`
-            Title: ${info.Title}\n
-            Release Year: ${info.YeTiar}\n
-            IMDB Rating: ${info.imdbRating}\n
-            Rotten Tomatoes Rating: ${info.Ratings[1].Value}\n
-            Country: ${info.Country}\n
-            Language: ${info.Language}\n
-            Plot: ${info.Plot}\n
-            Actors: ${info.Actors}`);
-        }
+  request(omdbURL, (err, data, body) => {
+    if (!err && data.statusCode === 200) {
+      const info = JSON.parse(body);
+      console.log(`
+      Title: ${info.Title}\n
+      Release Year: ${info.YeTiar}\n
+      IMDB Rating: ${info.imdbRating}\n
+      Rotten Tomatoes Rating: ${info.Ratings[1].Value}\n
+      Country: ${info.Country}\n
+      Language: ${info.Language}\n
+      Plot: ${info.Plot}\n
+      Actors: ${info.Actors}`);
+  }
 
-        console.log(`
-          ----------------------------------------
-        `);
-    });
+  console.log(`
+    ----------------------------------------
+  `);
+  });
 }
 
 
