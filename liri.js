@@ -79,7 +79,7 @@ const movieThis = () => {
             Title: ${info.Title}\n
             Release Year: ${info.YeTiar}\n
             IMDB Rating: ${info.imdbRating}\n
-            
+            Rotten Tomatoes Rating: ${info.Ratings[1].Value}\n
             Country: ${info.Country}\n
             Language: ${info.Language}\n
             Plot: ${info.Plot}\n
