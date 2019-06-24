@@ -1,8 +1,7 @@
 require('dotenv').config();
 const Spotify = require('node-spotify-api');
-const request = require("request");
+const request = require('request');
 const moment = require('moment');
-moment().format();
 
 
 // Import API keys from keys.js file
