@@ -89,7 +89,7 @@ const spotifyThisSong = () => {
       let songs = [];
       for (let i = 0; i < data.tracks.items.length; i++) {
         songs.push(data.tracks.items[i].name);
-    }
+      }
 
       for (let i = 0; i < songs.length; i++) {
         console.log(`Song: ${songs[i]}`);
