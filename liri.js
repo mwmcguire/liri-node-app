@@ -24,7 +24,7 @@ for (let i = 3; i < nodeArgs.length; i++) {
 
 
 
-// CONCERT-THIS
+// CONCERT-THIS : Search bands in town API by band name
 // --------------------------------------------------------------
 const concertThis = () => {
  const bitURL = `https://rest.bandsintown.com/artists/${searchQuery}/events?app_id=codingbootcamp`;
@@ -62,12 +62,13 @@ const spotifyThisSong = () => {
       CALLING SPOTIFY API... 
     =========================`)
   const getSongInfo = () => {
-    spotify.search({ type:'track', query:searchQuery, limit: 2 }, (err, data) => {
+    spotify.search({ type: "track", query: searchQuery, limit: 1 }, (err, data) => {
+    
       if (err) {
         return console.log ('Error occurred: ' + err);
       }
     
-
+    
       // Get artist names...
       let artists = [];
       for (let i = 0; i < data.tracks.items.length; i++) {
@@ -96,7 +97,7 @@ const spotifyThisSong = () => {
       }
 
 
-      // Get album names...
+      // Get album name...
       let albums = [];
       for (let i = 0; i < data.tracks.items.length; i++) {
         albums.push(data.tracks.items[i].album);
@@ -114,7 +115,7 @@ const spotifyThisSong = () => {
       }
 
       for (let i = 0; i < preview.length; i++) {
-        console.log(`Album: ${preview[i]}`);
+        console.log(`Preview: ${preview[i]}`);
       }
     
       console.log("----------------------------------------");
